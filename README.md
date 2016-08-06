@@ -1,5 +1,7 @@
 # http-fetch
 
+[![Build Status](https://travis-ci.org/tp/rust-http-fetch.svg?branch=master)](https://travis-ci.org/tp/rust-http-fetch)
+
 ## License
 
 Licensed under either of
