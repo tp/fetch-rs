@@ -1,0 +1,10 @@
+[package]
+name = "http-fetch"
+version = "0.2.0"
+authors = ["Timm Preetz <timm@preetz.us>"]
+license = "MIT/Apache-2.0"
+
+[dependencies]
+hyper = "0.9.10"
+flate2 = "0.2"
+encoding = "0.2.32"
