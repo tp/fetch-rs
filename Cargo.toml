@@ -1,8 +1,8 @@
 [package]
-name = "http_fetch"
+name = "fetch"
 description = "Fetch web pages easily (supports compression and non UTF-8 encodings)"
-version = "0.3.1"
-repository = "https://github.com/tp/http_fetch-rs"
+version = "0.4.0"
+repository = "https://github.com/tp/fetch-rs"
 authors = ["Timm Preetz <timm@preetz.us>"]
 license = "MIT/Apache-2.0"
 

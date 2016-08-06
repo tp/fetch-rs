@@ -1,11 +1,13 @@
-# http-fetch
+# fetch
 
-[![Build Status](https://travis-ci.org/tp/http_fetch-rs.svg?branch=master)](https://travis-ci.org/tp/http_fetch-rs)
+[![Build Status](https://travis-ci.org/tp/fetch-rs.svg?branch=master)](https://travis-ci.org/tp/fetch-rs)
 
 A small Rust library to fetch web pages.
 
 ```rs
-let body = fetch_page(url); // fetch the response body of the given URL as String
+extern crate fetch;
+
+let body = fetch::fetch_page("https://www.rust-lang.org/en-US/"); // fetch the response body of the given URL as String
 ```
 
 ## Development
