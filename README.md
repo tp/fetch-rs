@@ -4,10 +4,12 @@
 
 A small Rust library to fetch web pages.
 
-```rs
+```rust
 extern crate fetch;
 
-let body = fetch::fetch_page("https://www.rust-lang.org/en-US/"); // fetch the response body of the given URL as String
+fn main() {
+    let body = fetch::fetch_page("https://www.rust-lang.org/en-US/"); // fetch the response body of the given URL as String
+}
 ```
 
 ## Development
