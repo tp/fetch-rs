@@ -14,7 +14,7 @@ use hyper::Client;
 use hyper::header::{AcceptCharset, AcceptEncoding, ContentEncoding, ContentType, Charset, Headers,
                     qitem, Encoding as HyperEncoding};
 
-fn fetch_page(url: &str) -> Result<String, &'static str> {
+pub fn fetch_page(url: &str) -> Result<String, &'static str> {
     let client = Client::new();
 
     let mut headers = Headers::new();
@@ -103,17 +103,6 @@ fn fetch_page(url: &str) -> Result<String, &'static str> {
     return WINDOWS_1252.decode(&body_buffer, DecoderTrap::Strict)
         .ok()
         .ok_or("Error decoding page body (using WINDOWS_1252)");
-}
-
-fn print_page(url: &str) {
-    let decoded = fetch_page(url);
-
-    println!("{}", decoded.unwrap());
-}
-
-
-fn main() {
-    print_page("https://eu.httpbin.org/deflate");
 }
 
 #[test]
