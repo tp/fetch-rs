@@ -2,7 +2,7 @@
 name = "fetch"
 description = "Fetch web pages easily (supports compression and non UTF-8 encodings)"
 readme = "README.md"
-version = "0.7.1"
+version = "0.7.2"
 repository = "https://github.com/tp/fetch-rs"
 documentation = "https://docs.rs/fetch"
 authors = ["Timm Preetz <timm@preetz.us>"]
