@@ -30,6 +30,9 @@ impl From<hyper::error::Error> for FetchError {
         FetchError::RetrieveError(err)
     }
 }
+
+
+fn get_body(url: &str) -> Result<(hyper::client::response::Response, Vec<u8>), FetchError> {
     let client = Client::new();
 
     let mut headers = Headers::new();
@@ -45,9 +48,13 @@ impl From<hyper::error::Error> for FetchError {
 
     try!(fetch_result.read_to_end(&mut body_buffer).map_err(|e| FetchError::ReadError(e)));
 
-    println!("headers {}", fetch_result.headers);
+    Ok((fetch_result, body_buffer))
+}
 
-    match fetch_result.headers.get::<ContentEncoding>() {
+
+fn decompress_body(response: &hyper::client::response::Response, mut body: Vec<u8>) -> Result<Vec<u8>, FetchError> {
+
+    match response.headers.get::<ContentEncoding>() {
         Some(content_encoding_header) => {
             println!("encodings {}", content_encoding_header);
             for encoding in content_encoding_header.iter().rev() {
@@ -55,22 +62,24 @@ impl From<hyper::error::Error> for FetchError {
                     HyperEncoding::Gzip => {
                         let mut unzipped_body_buffer = Vec::new();
                         {
-                            let mut d = try!(GzDecoder::new(body_buffer.as_slice()).map_err(|e| FetchError::ReadError(e)));
+                            let mut d = try!(GzDecoder::new(body.as_slice()).map_err(|e| FetchError::ReadError(e)));
 
                             try!(d.read_to_end(&mut unzipped_body_buffer).map_err(|e| FetchError::ReadError(e)));
                         }
-                        body_buffer = unzipped_body_buffer;
+
+                        body = unzipped_body_buffer
                     }
 
                     HyperEncoding::Deflate => {
                         let mut unzipped_body_buffer = Vec::new();
                         {
-                            let mut d = ZlibDecoder::new(body_buffer.as_slice());
+                            let mut d = ZlibDecoder::new(body.as_slice());
                             let res = d.read_to_end(&mut unzipped_body_buffer);
 
                             try!(res.map_err(|e| FetchError::ReadError(e)));
                         }
-                        body_buffer = unzipped_body_buffer;
+
+                        body = unzipped_body_buffer
                     }
                     HyperEncoding::Chunked => {}
                     HyperEncoding::Identity => {}
@@ -81,7 +90,11 @@ impl From<hyper::error::Error> for FetchError {
         None => {}
     }
 
-    match fetch_result.headers.get::<ContentType>() {
+    Ok(body)
+}
+
+fn convert_body_to_string(response: &hyper::client::response::Response, body: Vec<u8>) -> Result<String, FetchError> {
+    match response.headers.get::<ContentType>() {
         Some(content_type_header) => {
                 // .ok_or(FetchError::CharsetError("Error getting charset from content-type header".into) {
             match content_type_header.get_param(hyper::mime::Attr::Charset) {
@@ -89,7 +102,7 @@ impl From<hyper::error::Error> for FetchError {
                     println!("charset: {}", charset);
                     match encoding_from_whatwg_label(charset) {
                         Some(decoder) => {
-                            return decoder.decode(&body_buffer, DecoderTrap::Strict)
+                            return decoder.decode(&body, DecoderTrap::Strict)
                                 .ok()
                                 .ok_or(FetchError::CharsetError("Error decoding page body (using decoder for charset from \
                                         content-type)".into()));
@@ -109,9 +122,19 @@ impl From<hyper::error::Error> for FetchError {
         }
     }
 
-    return WINDOWS_1252.decode(&body_buffer, DecoderTrap::Strict)
+    return WINDOWS_1252.decode(&body, DecoderTrap::Strict)
         .ok()
         .ok_or(FetchError::CharsetError("Error decoding page body (using WINDOWS_1252)".into()));
+}
+
+/// fetch_body returns the body of a HTTP GET request as String
+/// support non-UTF-8 encoded and compressed responses
+pub fn fetch_body(url: &str) -> Result<String, FetchError> {
+    let (response, raw_body) = try!(get_body(url));
+
+    let uncompressed_body_buffer = try!(decompress_body(&response, raw_body));
+
+    convert_body_to_string(&response, uncompressed_body_buffer)
 }
 
 #[test]

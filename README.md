@@ -16,10 +16,7 @@ fn main() {
 
 ## Development
 
-When running on OS X with a homebrew installed openssl version, make sure the correct paths are passed to cargo.
-```bash
-env OPENSSL_INCLUDE_DIR="/usr/local/opt/openssl/include" OPENSSL_LIB_DIR="/usr/local/opt/openssl/lib" cargo test
-```
+When running on OS X with a homebrew installed openssl version, make sure the correct paths are passed to cargo. See the `scripts` folder for details.
 
 ## License
 
