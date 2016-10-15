@@ -10,15 +10,15 @@ A small Rust library to fetch web pages.
 extern crate fetch;
 
 fn main() {
-    let body = fetch::fetch_page("https://www.rust-lang.org/en-US/"); // fetch the response body of the given URL as String
+    let body = fetch::fetch_body("https://www.rust-lang.org/en-US/"); // fetch the response body of the given URL as String
 }
 ```
 
 ## Development
 
-When running on OS X with a homebrew installed openssl version, make sure to pass on the correct paths to cargo to build:
+When running on OS X with a homebrew installed openssl version, make sure the correct paths are passed to cargo.
 ```bash
-env OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include DEP_OPENSSL_INCLUDE=/usr/local/opt/openssl/include cargo test
+env OPENSSL_INCLUDE_DIR="/usr/local/opt/openssl/include" OPENSSL_LIB_DIR="/usr/local/opt/openssl/lib" cargo test
 ```
 
 ## License
