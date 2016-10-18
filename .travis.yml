@@ -9,6 +9,16 @@ matrix:
 notifications:
   email:
     on_success: never
+before_install:
+  osx:
+    - brew uninstall openssl && brew install openssl --universal
+script:
+  - cargo build
+  - cargo test
+env:
+  osx:
+    - OPENSSL_INCLUDE_DIR: /usr/local/opt/openssl/include
+    - OPENSSL_LIB_DIR: /usr/local/opt/openssl/lib
 os:
   - linux
   - osx
