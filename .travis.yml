@@ -10,8 +10,8 @@ notifications:
   email:
     on_success: never
 before_install:
-  osx:
-    - brew uninstall openssl && brew install openssl --universal
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew uninstall openssl            ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install openssl --universal  ; fi
 script:
   - cargo build
   - cargo test
