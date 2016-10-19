@@ -9,6 +9,14 @@ matrix:
 notifications:
   email:
     on_success: never
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew uninstall openssl                                       ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install openssl --universal                             ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export OPENSSL_INCLUDE_DIR="/usr/local/opt/openssl/include"  ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export OPENSSL_LIB_DIR="/usr/local/opt/openssl/lib"          ; fi
+script:
+  - cargo build
+  - cargo test
 os:
   - linux
   - osx
