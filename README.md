@@ -1,6 +1,7 @@
 # fetch
 
 [![Build Status](https://travis-ci.org/tp/fetch-rs.svg?branch=master)](https://travis-ci.org/tp/fetch-rs)
+[![fetch on crates.io](https://img.shields.io/crates/v/fetch.svg)](https://crates.io/crates/fetch)
 
 [Documentation](https://docs.rs/fetch)
 
